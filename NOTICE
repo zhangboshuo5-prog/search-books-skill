@@ -1,0 +1,11 @@
+Search Books Skill
+
+This project is inspired by zstmfhy/zlibrary-to-notebooklm:
+https://github.com/zstmfhy/zlibrary-to-notebooklm
+
+The upstream project is distributed under the MIT License:
+Copyright (c) 2025 zlibrary-to-notebooklm contributors.
+
+This repository implements a separate, constrained workflow for exact-title
+original-PDF retrieval and non-overwriting Obsidian storage. It does not include
+NotebookLM upload, EPUB conversion, format fallback, or unattended batch use.
