@@ -1,0 +1,4 @@
+interface:
+  display_name: "搜书 Skills / Search Books"
+  short_description: "Find verified original PDFs and save them to Obsidian"
+  default_prompt: "Use $search-books to find an authorized original PDF by exact title and save it to my Obsidian vault."
