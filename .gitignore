@@ -1,0 +1,10 @@
+.DS_Store
+.env
+.venv/
+__pycache__/
+*.py[cod]
+*.download
+*.partial
+*.pdf
+storage-state-z-library.json
+downloads/
