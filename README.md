@@ -92,6 +92,37 @@ cp -R search-books "$HERMES_HOME/skills/research/search-books"
 hermes skills list
 ```
 
+### 安装到 Codex
+
+全局安装会让所有 Codex 项目都能发现这个 Skill：
+
+```bash
+git clone https://github.com/zhangboshuo5-prog/search-books-skill.git
+cd search-books-skill
+
+mkdir -p "$HOME/.agents/skills"
+cp -R search-books "$HOME/.agents/skills/search-books"
+
+export SEARCH_BOOKS_STATE_DIR="$HOME/.codex/state/search-books"
+```
+
+如果只想让一个项目使用，将 Skill 放到该项目的 `.agents/skills/`：
+
+```bash
+export PROJECT_ROOT="/你的/Git/仓库/绝对路径"
+mkdir -p "$PROJECT_ROOT/.agents/skills"
+cp -R search-books "$PROJECT_ROOT/.agents/skills/search-books"
+
+export SEARCH_BOOKS_STATE_DIR="$HOME/.codex/state/search-books"
+```
+
+Codex 会从当前目录向上扫描到仓库根目录中的 `.agents/skills`，并同时读取用户级
+`$HOME/.agents/skills`。它通常会自动检测新增 Skill；如果没有出现，请重启 Codex。
+目标目录已经存在时不要直接覆盖；先备份并比较差异。
+
+上述目录与调用方式依据 OpenAI 官方
+[Codex Build skills](https://learn.chatgpt.com/docs/build-skills.md) 文档。
+
 ### 配置
 
 ```bash
@@ -105,7 +136,27 @@ export HERMES_HOME="${HERMES_HOME:-$HOME/.hermes}"
 |---|---|
 | `OBSIDIAN_VAULT_PATH` | 覆盖默认 Vault 路径 `~/Documents/wiki/My-wiki` |
 | `HERMES_HOME` | 指定 Hermes 根目录或当前 profile 目录 |
+| `SEARCH_BOOKS_STATE_DIR` | 指定登录状态目录；Codex 推荐 `~/.codex/state/search-books` |
 | `PLAYWRIGHT_CLI_BIN` | 指定 `playwright-cli` 可执行文件的绝对路径 |
+
+### 在 Codex 中使用
+
+显式调用最可靠。在 Codex 桌面端可从侧边栏打开 **Skills** 查看；在 Codex
+CLI/IDE 中可以运行 `/skills`，也可以直接输入：
+
+```text
+使用 $search-books 搜索《置身事内》的原始 PDF，并保存到我的 Obsidian Vault。
+```
+
+也可以自然表达：
+
+```text
+用搜书 Skills 下载《置身事内》，只保留原始 PDF。
+```
+
+Codex 会读取 `SKILL.md`，先运行 `doctor`，通过后再执行精确标题搜索。若需要登录，
+Codex 应让你在本机交互式终端完成登录，不会在对话中索取密码。每次下载都必须由你
+明确提供一个书名；不要把该 Skill 接入定时或批量任务。
 
 ### 使用方法
 
@@ -212,6 +263,41 @@ cp -R search-books "$HERMES_HOME/skills/research/search-books"
 hermes skills list
 ```
 
+### Install for Codex
+
+A global install makes the Skill discoverable from every Codex project:
+
+```bash
+git clone https://github.com/zhangboshuo5-prog/search-books-skill.git
+cd search-books-skill
+
+mkdir -p "$HOME/.agents/skills"
+cp -R search-books "$HOME/.agents/skills/search-books"
+
+export SEARCH_BOOKS_STATE_DIR="$HOME/.codex/state/search-books"
+```
+
+For a project-local install, place the Skill under that project's
+`.agents/skills/` directory:
+
+```bash
+export PROJECT_ROOT="/absolute/path/to/your/git/repository"
+mkdir -p "$PROJECT_ROOT/.agents/skills"
+cp -R search-books "$PROJECT_ROOT/.agents/skills/search-books"
+
+export SEARCH_BOOKS_STATE_DIR="$HOME/.codex/state/search-books"
+```
+
+Codex scans `.agents/skills` from the current working directory up to the
+repository root and also reads the user-level `$HOME/.agents/skills`. It
+normally detects new Skills automatically; restart Codex if the Skill does not
+appear. If the destination already exists, back it up and inspect the diff
+instead of overwriting it blindly.
+
+These locations and invocation methods follow OpenAI's official
+[Codex Build skills](https://learn.chatgpt.com/docs/build-skills.md)
+documentation.
+
 ### Configuration
 
 ```bash
@@ -225,7 +311,32 @@ Optional environment variables:
 |---|---|
 | `OBSIDIAN_VAULT_PATH` | Override the default `~/Documents/wiki/My-wiki` vault |
 | `HERMES_HOME` | Select the Hermes root or active profile directory |
+| `SEARCH_BOOKS_STATE_DIR` | Select session storage; Codex should use `~/.codex/state/search-books` |
 | `PLAYWRIGHT_CLI_BIN` | Select an absolute `playwright-cli` executable path |
+
+### Use with Codex
+
+Explicit invocation is the most reliable. In the Codex desktop app, open
+**Skills** in the sidebar. In Codex CLI/IDE, run `/skills` to inspect installed
+Skills, or enter:
+
+```text
+Use $search-books to find the authorized original PDF for "Book Title" and
+save it to my Obsidian vault.
+```
+
+Natural-language invocation also works when the title and original-PDF intent
+are explicit:
+
+```text
+Use Search Books to download "Book Title" and keep only the original PDF.
+```
+
+Codex reads `SKILL.md`, runs `doctor`, and proceeds only after the preflight
+passes. If authentication is required, Codex must ask you to complete login in
+a local interactive terminal and must never request a password in chat. Every
+download requires one explicit title; do not wire this Skill into scheduled or
+batch tasks.
 
 ### Usage
 

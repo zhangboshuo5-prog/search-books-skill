@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import os
 import shutil
 import subprocess
 import tempfile
@@ -45,6 +46,21 @@ class TitleTests(unittest.TestCase):
         ]
         selected = MODULE.select_exact_pdf(books, "目标书")
         self.assertEqual(selected["id"], 3)
+
+
+class StatePathTests(unittest.TestCase):
+    def test_search_books_state_dir_overrides_hermes_home(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            expected = Path(tmp) / "codex-state"
+            with mock.patch.dict(
+                os.environ,
+                {
+                    "SEARCH_BOOKS_STATE_DIR": str(expected),
+                    "HERMES_HOME": "/ignored/hermes-home",
+                },
+                clear=True,
+            ):
+                self.assertEqual(MODULE.default_state_dir(), expected)
 
 
 class PdfCommitTests(unittest.TestCase):

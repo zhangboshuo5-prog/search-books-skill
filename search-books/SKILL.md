@@ -26,6 +26,18 @@ conversion, summaries, general web search, and any other mirror.
   the search to another site.
 - Never request passwords in chat or expose stored browser cookies.
 
+## Runtime Paths
+
+Resolve the absolute directory containing this `SKILL.md` and assign it to
+`SKILL_DIR` before running a bundled command.
+
+- In Codex, install globally at `$HOME/.agents/skills/search-books`, or install
+  for one repository at `<repo>/.agents/skills/search-books`.
+- In Hermes, use the installed Skill directory exposed by the runtime.
+- In Codex, set `SEARCH_BOOKS_STATE_DIR` to
+  `$HOME/.codex/state/search-books` so browser state remains under Codex. In
+  Hermes, leave it unset to use `HERMES_HOME`.
+
 ## Fixed Contract
 
 | Item | Rule |
@@ -54,13 +66,11 @@ Completion criterion: one non-empty title string is available.
 Run the doctor command on first use or after a setup/network failure:
 
 ```bash
-python3 "${HERMES_SKILL_DIR}/scripts/search_books.py" doctor --json
+python3 "${SKILL_DIR}/scripts/search_books.py" doctor --json
 ```
 
-Hermes expands `${HERMES_SKILL_DIR}` to this installed Skill's absolute
-directory when it loads the instructions. The script never installs missing
-dependencies automatically. Install the pinned `@playwright/cli@0.1.17`
-manually if doctor reports it missing.
+The script never installs missing dependencies automatically. Install the
+pinned `@playwright/cli@0.1.17` manually if doctor reports it missing.
 
 Interpret these fields:
 
@@ -86,12 +96,12 @@ Never request or store the user's password in chat. Ask the user to run this
 command in a local interactive terminal:
 
 ```bash
-python3 "${HERMES_SKILL_DIR}/scripts/search_books.py" login
+python3 "${SKILL_DIR}/scripts/search_books.py" login
 ```
 
 The command opens the confirmed `.im` login page in a headed browser, waits for
 the user to finish login, and stores browser state with owner-only permissions
-under the active `HERMES_HOME`.
+under the configured runtime state directory.
 
 Completion criterion: the command reports the saved
 `storage-state-z-library.json` path.
@@ -101,7 +111,7 @@ Completion criterion: the command reports the saved
 Run:
 
 ```bash
-python3 "${HERMES_SKILL_DIR}/scripts/search_books.py" download "<书名>" --json
+python3 "${SKILL_DIR}/scripts/search_books.py" download "<书名>" --json
 ```
 
 The command reruns doctor as a hard preflight, then uses the `.im` search and
@@ -129,7 +139,7 @@ PDF on disk at the reported destination.
 For `下载《如何阅读一本书》`:
 
 ```bash
-python3 "${HERMES_SKILL_DIR}/scripts/search_books.py" download "如何阅读一本书" --json
+python3 "${SKILL_DIR}/scripts/search_books.py" download "如何阅读一本书" --json
 ```
 
 Then report only the structured result. Do not create notes under `wiki/` and

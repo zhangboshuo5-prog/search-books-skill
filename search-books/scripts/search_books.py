@@ -99,6 +99,9 @@ def sanitize_filename_title(value: str, *, max_length: int = 120) -> str:
 
 
 def default_state_dir() -> Path:
+    skill_state_dir = os.environ.get("SEARCH_BOOKS_STATE_DIR")
+    if skill_state_dir:
+        return Path(skill_state_dir).expanduser()
     hermes_home = os.environ.get("HERMES_HOME")
     root = Path(hermes_home).expanduser() if hermes_home else DEFAULT_HERMES_HOME
     return root / "state" / STATE_DIR_NAME
